@@ -14,35 +14,41 @@ const page = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [tripTypeFilter, setTripTypeFilter] = useState("all");
+  const [vendor, setVendor] = useState(null);
 
-  const vendor = JSON.parse(localStorage.getItem("vendor"));
-
-  if (!vendor) {
-    console.error("Vendor not found in localStorage");
-    // Optionally handle the case when vendor is not found, like redirecting the user
-  }
-
-  const email = vendor ? vendor.email : null;
-  const vendorId = vendor ? vendor.vendorId : null;
-
-  console.log(vendorId);
+  const router = useRouter();
 
   useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        const response = await axios.get(
-          `https://worldtriplink.com/${vendorId}/vendorByBookings`
-        );
-        setBookings(response.data);
-      } catch (error) {
-        setError("Failed to fetch bookings");
-      } finally {
-        setLoading(false);
+    // Access localStorage on the client side
+    if (typeof window !== "undefined") {
+      const storedVendor = localStorage.getItem("vendor");
+      if (storedVendor) {
+        setVendor(JSON.parse(storedVendor));
+      } else {
+        console.error("Vendor not found in localStorage");
+        // Optionally handle the case when vendor is not found, like redirecting the user
       }
-    };
-
-    fetchBookings();
+    }
   }, []);
+
+  useEffect(() => {
+    if (vendor && vendor.vendorId) {
+      const fetchBookings = async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:8080/${vendor.vendorId}/vendorByBookings`
+          );
+          setBookings(response.data);
+        } catch (error) {
+          setError("Failed to fetch bookings");
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchBookings();
+    }
+  }, [vendor]);
 
   const complet = bookings.filter((booking) => booking.status === 2);
   const c = complet.length;
@@ -56,8 +62,6 @@ const page = () => {
   const cancelled = bookings.filter((booking) => booking.status === 3);
   const cn = cancelled.length;
 
-  console.log(c, p, o, cn);
-
   const filteredBookings = bookings.filter((booking) => {
     if (tripTypeFilter === "all") return true;
     if (tripTypeFilter === "one-way" && booking.tripType === "oneWay")
@@ -69,7 +73,7 @@ const page = () => {
 
   const deleteBooking = async (id) => {
     try {
-      await axios.delete(`https://worldtriplink.com/delete/${id}`);
+      await axios.delete(`http://localhost:8080/delete/${id}`);
       alert("Booking deleted successfully!");
       setBookings(bookings.filter((booking) => booking.id !== id));
     } catch (error) {
@@ -78,11 +82,13 @@ const page = () => {
     }
   };
 
-  const router = useRouter();
-
   const handleStatusClick = (status) => {
     router.push(`/status/${status}`);
   };
+
+  if (!vendor) {
+    return <div>Loading...</div>; // Optionally show a loading state until the vendor is fetched
+  }
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -168,10 +174,7 @@ const page = () => {
                 <thead className="bg-gray-100">
                   <tr className="border border-gray-300">
                     <th className="text-left font-bold p-3 border border-gray-300">
-                      <Link
-                        href="/customer-details"
-                        className="hover:underline"
-                      >
+                      <Link href="/customer-details" className="hover:underline">
                         Booking ID
                       </Link>
                     </th>
@@ -195,13 +198,11 @@ const page = () => {
                         Trip Status
                       </Link>
                     </th>
-
                     <th className="text-left font-bold p-3 border border-gray-300">
                       <Link href="/trip-status" className="hover:underline">
                         View
                       </Link>
                     </th>
-
                     <th className="text-left font-bold p-3 border border-gray-300">
                       <button className="hover:underline">Action</button>
                     </th>
@@ -271,7 +272,7 @@ const page = () => {
                           <MdDeleteOutline
                             className="text-2xl"
                             onClick={() => deleteBooking(booking.id)}
-                          />{" "}
+                          />
                         </td>
                       </tr>
                     );

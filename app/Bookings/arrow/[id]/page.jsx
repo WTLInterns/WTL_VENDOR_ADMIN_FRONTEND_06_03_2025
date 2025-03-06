@@ -36,7 +36,7 @@ const Page = () => {
     const fetchBooking = async () => {
       try {
         const response = await axios.get(
-          `https://worldtriplink.com/booking/${params.id}`
+          `http://localhost:8080/booking/${params.id}`
         );
         setBooking(response.data);
       } catch (error) {
@@ -61,7 +61,7 @@ const Page = () => {
       if (booking && vendorId) {
         try {
           const response = await axios.get(
-            `https://worldtriplink.com/${vendorId}/drivers`
+            `http://localhost:8080/${vendorId}/drivers`
           );
           setDrivers(response.data);
         } catch (error) {
@@ -79,7 +79,7 @@ const Page = () => {
       if (vendorId) {
         try {
           const response = await axios.get(
-            `https://worldtriplink.com/${vendorId}/cabs`
+            `http://localhost:8080/${vendorId}/cabs`
           );
           setCabs(response.data);
         } catch (error) {
@@ -101,7 +101,7 @@ const Page = () => {
   const handleUpdateStatus = async (newStatus) => {
     try {
       const response = await axios.put(
-        `https://worldtriplink.com/${params.id}/status`,
+        `http://localhost:8080/${params.id}/status`,
         { status: newStatus }
       );
       setBooking(response.data);
@@ -126,7 +126,7 @@ const Page = () => {
   const assignVendorDriver = async (vendorDriverId) => {
     try {
       const response = await axios.put(
-        `https://worldtriplink.com/${params.id}/assignVendorDriver/${vendorDriverId}`
+        `http://localhost:8080/${params.id}/assignVendorDriver/${vendorDriverId}`
       );
       alert("Driver assigned successfully:", response.data);
     } catch (error) {
@@ -138,7 +138,7 @@ const Page = () => {
   const assignVendorCab = async (vendorCabId) => {
     try {
       const response = await axios.put(
-        `https://worldtriplink.com/${params.id}/assignVendorCab/${vendorCabId}`
+        `http://localhost:8080/${params.id}/assignVendorCab/${vendorCabId}`
       );
       alert("Cab assigned successfully:", response.data);
     } catch (error) {

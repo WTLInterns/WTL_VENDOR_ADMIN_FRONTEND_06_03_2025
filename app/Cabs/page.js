@@ -104,7 +104,7 @@ const Cabs = () => {
 
     try {
       const response = await axios.post(
-        `https://worldtriplink.com/addVendorCab/${vendorId}`,
+        `http://localhost:8080/addVendorCab/${vendorId}`,
         form,
         {
           headers: {
@@ -146,7 +146,7 @@ const Cabs = () => {
       try {
         if (vendorId) {
           const response = await axios.get(
-            `https://worldtriplink.com/${vendorId}/cabs`
+            `http://localhost:8080/${vendorId}/cabs`
           );
           setCabs(response.data); // Set fetched cabs data
         }

@@ -21,7 +21,7 @@ export default function Login() {
     try {
       // Make POST request to login API
       const response = await axios.post(
-        "https://worldtriplink.com/vendors/vendorLogin",
+        "http://localhost:8080/vendors/vendorLogin",
         {
           email,
           password,
