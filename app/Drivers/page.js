@@ -128,7 +128,7 @@ const Drivers = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:8080/addVendorDriver/${vendorId}`,
+        `https://worldtriplink.com/addVendorDriver/${vendorId}`,
         form,
         {
           headers: {
@@ -151,7 +151,7 @@ const Drivers = () => {
       try {
         if (vendorId) {
           const response = await axios.get(
-            `http://localhost:8080/${vendorId}/drivers`
+            `https://worldtriplink.com/${vendorId}/drivers`
           );
           setCabs(response.data); // Set fetched cabs data
         }
