@@ -59,6 +59,47 @@ const Drivers = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const driverNameReges = /.+/;
+    if (!driverNameReges.test(formData.driverName)) {
+      alert("Driver name cannot be empty");
+      return;
+    }
+
+    const addressReges = /.+/;
+    if (!addressReges.test(formData.address)) {
+      alert("Address cannot be empty");
+      return;
+    }
+
+    const altContactNoRegex = /^[6-9]\d{9}$/;
+    if (!altContactNoRegex.test(formData.altContactNo)) {
+      alert("Contact no shoulde be greater than 9");
+      return;
+    }
+
+    const contactNoRegex = /^[6-9]\d{9}$/;
+    if (!contactNoRegex.test(formData.contactNo)) {
+      alert("Alternate Contact no shoulde be greater than 9");
+
+      return;
+    }
+
+    // // Validate Vehicle Number
+    // const vehicleNoRegex = /^[A-Z]{2}\s*[0-9]{2}\s*[A-Z]{1,2}\s*[0-9]{4}$/;
+    // if (!vehicleNoRegex.test(formData.vehicleNo)) {
+    //   alert(
+    //     "Please enter a valid Vehicle Number in Indian format (e.g., MH12AB1234)"
+    //   );
+    //   return;
+    // }
+
+    const dLNoRegex = /^[A-Z]{2}[0-9]{13}$/;
+    if (!dLNoRegex.test(formData.dLNo)) {
+      alert("Driver License are incorrect");
+
+      return;
+    }
+
     const form = new FormData();
 
     // Append text fields to form data
@@ -96,7 +137,7 @@ const Drivers = () => {
         }
       );
 
-      console.log("Vendor added successfully:", response.data);
+      alert("Vendor added successfully:", response.data);
       setShowForm(false);
     } catch (error) {
       console.error("Error adding vendor:", error);
@@ -177,6 +218,7 @@ const Drivers = () => {
                       onChange={handleInputChange}
                       className="border p-2 w-full md:w-2/3 rounded-md"
                       placeholder="Enter Driver Name"
+                      required
                     />
                   </div>
 
@@ -192,6 +234,7 @@ const Drivers = () => {
                       onChange={handleInputChange}
                       className="border p-2 w-full md:w-2/3 rounded-md"
                       placeholder="Enter Contact No."
+                      required
                     />
                   </div>
 
@@ -207,6 +250,7 @@ const Drivers = () => {
                       onChange={handleInputChange}
                       className="border p-2 w-full md:w-2/3 rounded-md"
                       placeholder="Enter Alternate Contact No."
+                      required
                     />
                   </div>
 
@@ -222,6 +266,7 @@ const Drivers = () => {
                       onChange={handleInputChange}
                       className="border p-2 w-full md:w-2/3 rounded-md"
                       placeholder="Enter Address"
+                      required
                     />
                   </div>
 
@@ -235,12 +280,14 @@ const Drivers = () => {
                       name="driverImage"
                       onChange={handleFileChange}
                       className="border p-2 w-full md:w-2/3 rounded-md"
+                      required
                     />
                     <input
                       type="file"
                       name="driverSelfie"
                       onChange={handleFileChange}
                       className="border p-2 w-full md:w-2/3 rounded-md mt-2"
+                      required
                     />
                   </div>
 
@@ -256,12 +303,14 @@ const Drivers = () => {
                       onChange={handleInputChange}
                       className="border p-2 w-full md:w-1/2 rounded-md"
                       placeholder="Enter DL No."
+                      required
                     />
                     <input
                       type="file"
                       name="dLnoImage"
                       onChange={handleFileChange}
                       className="border p-2 w-full md:w-1/2 rounded-md md:ml-2 mt-2 md:mt-0"
+                      required
                     />
                   </div>
 
@@ -277,12 +326,14 @@ const Drivers = () => {
                       onChange={handleInputChange}
                       className="border p-2 w-full md:w-1/2 rounded-md"
                       placeholder="Enter PVC No."
+                      required
                     />
                     <input
                       type="file"
                       name="pvcImage"
                       onChange={handleFileChange}
                       className="border p-2 w-full md:w-1/2 rounded-md md:ml-2 mt-2 md:mt-0"
+                      required
                     />
                   </div>
 
@@ -301,6 +352,7 @@ const Drivers = () => {
                           name={`driverDoc${index + 1}Image`}
                           onChange={handleFileChange}
                           className="border p-2 w-full md:w-2/3 rounded-md"
+                          required
                         />
                       </div>
                     )
@@ -317,6 +369,7 @@ const Drivers = () => {
                       onChange={handleInputChange}
                       className="border p-2 w-full md:w-2/3 rounded-md"
                       placeholder="Enter additional details"
+                      required
                     />
                   </div>
 

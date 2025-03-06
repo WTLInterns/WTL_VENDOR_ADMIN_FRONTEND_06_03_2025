@@ -1,9 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import { FaArrowRight, FaPlus, FaTimes } from "react-icons/fa";
+import { FaArrowRight, FaTimes } from "react-icons/fa";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import React from "react";
 import axios from "axios"; // Import axios
 import { useRouter } from "next/navigation";
 
@@ -53,14 +52,46 @@ const Cabs = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+
+    // For RC Number and Vehicle Number, convert to uppercase
+    if (name === "rCNo" || name === "vehicleNo") {
+      const uppercaseValue = value.toUpperCase();
+
+      // Format the input as user types (optional)
+      const formattedValue = uppercaseValue;
+
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: formattedValue,
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate RC Number
+    const rcNoRegex = /^[A-Z]{2}\s*[0-9]{2}\s*[A-Z]{1,2}\s*[0-9]{4}$/;
+    if (!rcNoRegex.test(formData.rCNo)) {
+      alert(
+        "Please enter a valid RC Number in Indian format (e.g., MH12AB1234)"
+      );
+      return;
+    }
+
+    // Validate Vehicle Number
+    const vehicleNoRegex = /^[A-Z]{2}\s*[0-9]{2}\s*[A-Z]{1,2}\s*[0-9]{4}$/;
+    if (!vehicleNoRegex.test(formData.vehicleNo)) {
+      alert(
+        "Please enter a valid Vehicle Number in Indian format (e.g., MH12AB1234)"
+      );
+      return;
+    }
 
     const form = new FormData();
 
@@ -178,6 +209,7 @@ const Cabs = () => {
                     onChange={handleInputChange}
                     className="border p-2 w-full md:w-2/3 rounded-md"
                     placeholder="Enter Cars | Cabs Name"
+                    required
                   />
                 </div>
 
@@ -192,13 +224,20 @@ const Cabs = () => {
                     value={formData.rCNo}
                     onChange={handleInputChange}
                     className="border p-2 w-full md:w-1/2 rounded-md"
-                    placeholder="Enter RC No."
+                    placeholder="Enter RC No. (e.g., MH12AB1234)"
+                    pattern="^[A-Z]{2}\s*[0-9]{2}\s*[A-Z]{1,2}\s*[0-9]{4}$"
+                    minLength="10"
+                    maxLength="13"
+                    required
+                    title="RC No must follow the Indian format: XX 00 X(X) 0000 (e.g., MH12AB1234)"
                   />
+
                   <input
                     type="file"
                     name="rCImage"
                     onChange={handleFileChange}
                     className="border p-2 w-full md:w-1/2 rounded-md md:ml-2 mt-2 md:mt-0"
+                    required
                   />
                 </div>
 
@@ -213,13 +252,19 @@ const Cabs = () => {
                     value={formData.vehicleNo}
                     onChange={handleInputChange}
                     className="border p-2 w-full md:w-1/2 rounded-md"
-                    placeholder="Enter Vehicle Number"
+                    placeholder="Enter Vehicle Number (e.g., MH12AB1234)"
+                    pattern="^[A-Z]{2}\s*[0-9]{2}\s*[A-Z]{1,2}\s*[0-9]{4}$"
+                    minLength="10"
+                    maxLength="13"
+                    required
+                    title="Vehicle Number must follow the Indian format: XX 00 X(X) 0000 (e.g., MH12AB1234)"
                   />
                   <input
                     type="file"
                     name="vehicleNoImage"
                     onChange={handleFileChange}
                     className="border p-2 w-full md:w-1/2 rounded-md md:ml-2 mt-2 md:mt-0"
+                    required
                   />
                 </div>
 
@@ -246,6 +291,7 @@ const Cabs = () => {
                       name={field}
                       onChange={handleFileChange}
                       className="w-full md:w-2/3 rounded-md"
+                      required
                     />
                   </div>
                 ))}
@@ -262,6 +308,7 @@ const Cabs = () => {
                     onChange={handleInputChange}
                     className="border p-2 w-full md:w-2/3 rounded-md"
                     placeholder="Enter Cab's Details"
+                    required
                   />
                 </div>
 

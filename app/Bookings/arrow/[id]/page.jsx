@@ -49,6 +49,12 @@ const Page = () => {
     }
   }, [params.id]);
 
+  if (booking) {
+    console.log(booking.time);
+  } else {
+    console.error("booking is undefined or null");
+  }
+
   // Fetch drivers when booking is loaded (or vendorId changes)
   useEffect(() => {
     const fetchDrivers = async () => {
@@ -170,14 +176,30 @@ const Page = () => {
             <div className="relative inline-block">
               <button
                 onClick={() => setIsDriverModalOpen(true)}
-                className="h-8 px-4 mr-2 bg-blue-600 text-white rounded-lg shadow-md transition"
+                className={`h-8 px-4 mr-2 rounded-lg shadow-md transition relative left-[273px] 
+    ${
+      booking.vendorDriver?.id
+        ? "bg-gray-400 cursor-not-allowed"
+        : "bg-blue-600 text-white"
+    }`}
+                disabled={!!booking.vendorDriver?.id}
+                title={
+                  booking.vendorDriver?.id ? "Driver is already assigned" : ""
+                }
               >
                 Assign Driver
               </button>
 
               <button
                 onClick={() => setIsCabModalOpen(true)}
-                className="h-8 px-4 bg-red-600 text-white rounded-lg shadow-md transition"
+                className={`h-8 px-4 rounded-lg shadow-md transition relative left-[54vh] 
+    ${
+      booking.vendorCab?.id
+        ? "bg-gray-400 cursor-not-allowed"
+        : "bg-red-600 text-white"
+    }`}
+                disabled={!!booking.vendorCab?.id}
+                title={booking.vendorCab?.id ? "Cab is already assigned" : ""}
               >
                 Assign Cab
               </button>
@@ -335,6 +357,15 @@ const Page = () => {
                 className="h-8 px-4 bg-blue-600 text-white rounded-lg shadow-md transition"
               >
                 Trip Complete
+              </button>
+            )}
+
+            {booking.status !== 1 && (
+              <button
+                onClick={() => handleUpdateStatus(2)}
+                className="h-8 px-4 bg-red-600 text-white rounded-lg shadow-md transition"
+              >
+                Cancel Booking
               </button>
             )}
             <button
